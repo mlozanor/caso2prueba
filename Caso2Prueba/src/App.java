@@ -25,15 +25,15 @@ public class App {
 
                 String nombreArchivo;
                 if (imagenSeleccionada == 1) {
-                    nombreArchivo = "Archivos/caso2-parrots_mod.bmp";
+                    nombreArchivo = "caso2-parrots_mod.bmp";
                 } else if (imagenSeleccionada == 2) {
-                    nombreArchivo = "Archivos/caso2-parrots.bmp";
+                    nombreArchivo = "caso2-parrots.bmp";
                 } else {
                     System.out.println("Selección no válida. Debe elegir 1 o 2.");
                     break;
                 }
-
-                imagen = new Imagen("Archivos/" + nombreArchivo);
+                String rutaBase = System.getProperty("user.dir") + "/Caso2Prueba/Archivos/";
+                imagen = new Imagen(rutaBase + nombreArchivo);
                 System.out.println("Imagen cargada exitosamente: " + nombreArchivo);
                 // Aquí se podrían generar las referencias.
                 break;
