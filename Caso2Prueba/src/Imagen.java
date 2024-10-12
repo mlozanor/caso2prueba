@@ -47,17 +47,27 @@ public class Imagen {
         return longitud;
     }
 
-    // Método para recuperar un mensaje escondido en la imagen
-    public void recuperar(char[] mensaje, int longitud) {
-        int bytesFila = ancho * 3;
-        for (int posCaracter = 0; posCaracter < longitud; posCaracter++) {
-            mensaje[posCaracter] = 0;
-            for (int i = 0; i < 8; i++) {
-                int numBytes = 16 + (posCaracter * 8) + i;
-                int fila = numBytes / bytesFila;
-                int col = (numBytes % bytesFila) / 3;
-                mensaje[posCaracter] |= (imagen[fila][col][numBytes % 3] & 1) << i;
+    // Método para generar las referencias de página para la recuperación del mensaje
+    public void generarReferencias(String archivoSalida, int tamanioPagina) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoSalida))) {
+            int totalBytes = alto * ancho * 3; // Total de bytes (imagen RGB)
+            int numPaginas = (int) Math.ceil((double) totalBytes / tamanioPagina);
+
+            writer.write("TP=" + tamanioPagina + "\n");
+            writer.write("NF=" + alto + "\n");
+            writer.write("NC=" + ancho + "\n");
+            writer.write("NP=" + numPaginas + "\n");
+
+            // Generar referencias desde el byte 16 para la recuperación del mensaje
+            for (int i = 16; i < totalBytes; i++) {
+                int paginaVirtual = i / tamanioPagina;
+                int desplazamiento = i % tamanioPagina;
+                writer.write(paginaVirtual + "," + desplazamiento + ",R\n");
             }
+
+            System.out.println("Archivo de referencias generado: " + archivoSalida);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
